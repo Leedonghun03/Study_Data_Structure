@@ -5,8 +5,8 @@ using namespace std;
 struct Node
 {
   int data;
-  Node* Left;
-  Node* Right;
+  Node* left;
+  Node* right;
 };
 
 class BST_TREE
@@ -18,51 +18,100 @@ public:
 
   Node* create_tree(int data)
   {
-    Node* node = new Node{data, NULL, NULL};
-
+    root = new Node{data, NULL, NULL};
+    cout << data << "를 기초를 한 BST_TREE 생성." << endl;
+    
     return root;
   }
 
-  Node* find_Node(Node* node, int find_data)
+  Node* find_Node(Node* start_node, int find_data)
   {
-    if(node == NULL)
+    if(!start_node)
+    {
       cout << "초기 값이 없습니다. -> create_tree를 이용해 생성해주세요." << endl;
+      return NULL;
+    }
 
-    if(root->data == find_data)
-      return root;
+    if(start_node->data == find_data)
+    {
+      cout << "값이 존재함 -> " << find_data << endl;
+      return start_node;
+    }
     else
     {
-      if(root->data > find_data)
-        return find_Node(root, find_data);
+      if(find_data < start_node->data)
+        return find_Node(start_node->left, find_data);
       else
-        return find_Node(root, find_data);
+        return find_Node(start_node->right, find_data);
     }
   }
 
-  void insert_Node(Node* node, int insert_data)
+  void insert_Node(Node* root, int insert_data)
   {
     Node* parent;
     
-    if(node == NULL)
+    if(root == NULL)
       cout << "초기 값이 없습니다. -> create_tree를 이용해 생성해주세요." << endl;
-    
-      while(node)
+    else
+    {
+      while(root)
         {
-          parent = node;
+          parent = root;
 
           if(parent->data > insert_data)
-            node = node->Left;
+            root = root->left;
           else
-            node = node->Right;
+            root = root->right;
         }
       
       Node* new_node = new Node{insert_data, NULL, NULL};
 
       if(parent->data > insert_data)
-        parent->Left = new_node;
+      {
+        cout << parent->data << "에 " << insert_data << "를 추가했습니다." << endl;
+        parent->left = new_node;
+      }
       else if(parent->data < insert_data)
-        parent->Right = new_node;
+      {
+        cout << parent->data << "에 " << insert_data << "를 추가했습니다." << endl;
+        parent->right = new_node;
+      }
       else
-        cout << insert_data << "는 " << parent->data << "에 이미 있는 값입니다." << endl;
+        cout << insert_data << "은 " << parent->data << "에 이미 있는 값입니다." << endl;
+    }
+  }
+
+  void preOrder(Node* start) //전위 출력
+  {
+    if(!start)
+      return;
+    
+    cout << start->data << "  ";
+
+    preOrder(start->left);
+    preOrder(start->right);
+  }
+  
+  void inOder(Node* start) //중위 출력
+  {
+    if (!start)
+      return;
+
+    inOder(start->left);
+    
+    cout << start->data << "  ";
+    
+    inOder(start->right);
+  }
+
+  void postOrder(Node* start) //후위 출력
+  {
+    if (!start)
+      return;
+
+    preOrder(start->left);
+    preOrder(start->right);
+    
+    cout << start->data << "  ";
   }
 };
